@@ -8,11 +8,12 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
 //Componentes criados
-import Name from './content-steps/name';
-import Description from './content-steps/description';
-import Stars from './content-steps/stars';
-import Power from './content-steps/power';
-import Image from './content-steps/image';
+import Name from './content/name';
+import Description from './content/description';
+import Stars from './content/stars';
+import Power from './content/power';
+import Image from './content/image';
+import CardGame from './content/card-game';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -60,8 +61,7 @@ export default function CreateCardGame() {
         <div className={classes.root}>
             <Grid container spacing={1} m={2}>
                 <Grid item xs={3}>
-                    <Typography variant="h6">O CARD AQUI</Typography>
-                    {list}
+                    <CardGame />
                 </Grid>
                 <Grid item xs={9}>
                     <Stepper activeStep={activeStep} alternativeLabel>

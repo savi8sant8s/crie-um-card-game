@@ -27,7 +27,7 @@ export default function App() {
                 <Grid item xs={8}>
                     <Typography variant="h2" style={{color: "white"}}>Crie seu card game agora!!!</Typography>
                     <Grid item xs={12}>
-                        <Button variant="contained" color="primary" fullWidth href="basic-template">Vamos começar</Button>
+                        <Button variant="contained" color="primary" fullWidth href="card-simples">Vamos começar</Button>
                     </Grid>
                 </Grid>
             </Grid>
