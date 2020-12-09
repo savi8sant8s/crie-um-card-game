@@ -8,7 +8,7 @@ import RadioGroup from '@material-ui/core/RadioGroup'
 import Radio from '@material-ui/core/Radio'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-import { Stage, Layer, Rect, Label, Text } from "react-konva";
+import { Stage, Layer, Rect, Label, Text, Image } from "react-konva";
 import { toJpeg } from 'html-to-image';
 
 const style = {
@@ -39,6 +39,54 @@ const Stars = (props) => {
     )
 }
 
+class URLImage extends React.Component {
+    state = {
+      image: null
+    };
+
+    componentDidMount() {
+      this.loadImage();
+    }
+
+    componentDidUpdate(oldProps) {
+      if (oldProps.src !== this.props.src) {
+        this.loadImage();
+      }
+    }
+
+    componentWillUnmount() {
+      this.image.removeEventListener('load', this.handleLoad);
+    }
+
+    loadImage() {
+      this.image = new window.Image();
+      this.image.src = this.props.src;
+      this.image.crossOrigin = '*';
+      this.image.addEventListener('load', this.handleLoad);
+    }
+
+    handleLoad = () => {
+      this.setState({
+        image: this.image
+      });
+    };
+
+    render() {
+      return (
+        <Image
+          x={this.props.x}
+          y={this.props.y}
+          width={this.props.width}
+          height={this.props.height}
+          image={this.state.image}
+          ref={node => {
+            this.imageNode = node;
+          }}
+        />
+      );
+    }
+}
+
 export default class SimpleCardGame extends React.Component {
 
     constructor(props) {
@@ -62,7 +110,7 @@ export default class SimpleCardGame extends React.Component {
     }
 
     downloadCardGame() {
-        toJpeg(document.getElementById('cardGame'), { quality: 1 })
+        toJpeg(document.getElementById('cardGame'), { quality: 1})
             .then(function (dataUrl) {
                 var link = document.createElement('a');
                 link.download = 'simple-card-game.jpeg';
@@ -145,9 +193,6 @@ export default class SimpleCardGame extends React.Component {
                                     height={200}
                                     fill="yellow"
                                 />
-                                <Label x={22} y={62}>
-                                    <Text text="Imagem do Card Game" />
-                                </Label>
                                 <Rect id="stars"
                                     x={20}
                                     y={250}
@@ -187,6 +232,7 @@ export default class SimpleCardGame extends React.Component {
                                 <Label x={137} y={442}>
                                     <Text text={`Defesa: ${this.state.defense}`} />
                                 </Label>
+                                <URLImage src={this.state.image} x={20} y={60} width={230} height={190} />
                             </Layer>
                         </Stage>
                     </Grid>
@@ -198,7 +244,7 @@ export default class SimpleCardGame extends React.Component {
                                     <Field title={'Digite uma descrição'} type={'text'} value={this.state.description} label={'Descrição'} handleChange={this.handleDescription} />
                                     <Field title={'Poder de ataque'} type={'number'} value={this.state.attack} label={'Ataque'} handleChange={this.handleAttack} />
                                     <Field title={'Poder de defesa'} type={'number'} value={this.state.defense} label={'Defesa'} handleChange={this.handleDefense} />
-                                    <Field title={'Imagem do Card Game'} type={'file'} value={this.state.image} handleChange={this.handleImage} />
+                                    <Field title={'Imagem do Card'} type={'url'} value={this.state.image} label={'URL da imagem'} handleChange={this.handleImage} />
                                 </Grid>
                                 <Grid item xs={6}>
                                     <Stars value={this.state.stars} handleChange={this.handleStars} />
