@@ -8,11 +8,8 @@ import RadioGroup from '@material-ui/core/RadioGroup'
 import Radio from '@material-ui/core/Radio'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
 import { Stage, Layer, Rect, Label, Text } from "react-konva";
-import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
+import { toJpeg } from 'html-to-image';
 
 const style = {
     padding: "1rem",
@@ -112,8 +109,9 @@ export default class SimpleCardGame extends React.Component {
     render() {
         return (
             <div style={style}>
-                <Grid container spacing={1}>
-                    <Grid id="cardGame" item xs={3}>
+                <Typography variant="h4" align={"center"}>Card Simples</Typography>
+                <Grid container alignContent={"center"} alignItems={"center"}>
+                    <Grid id="cardGame" item xs={6}>
                         <Stage width="260" height="510">
                             <Layer>
                                 <Rect id="background1"
@@ -192,7 +190,7 @@ export default class SimpleCardGame extends React.Component {
                             </Layer>
                         </Stage>
                     </Grid>
-                    <Grid id="editForm" item xs={9}>
+                    <Grid id="editForm" item xs={6}>
                         <FormControl noValidate autoComplete="off">
                             <Grid container justify="center" alignItems="center">
                                 <Grid item xs={6}>
