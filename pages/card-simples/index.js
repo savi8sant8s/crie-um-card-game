@@ -8,7 +8,11 @@ import RadioGroup from '@material-ui/core/RadioGroup'
 import Radio from '@material-ui/core/Radio'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 import { Stage, Layer, Rect, Label, Text } from "react-konva";
+import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
 
 const style = {
     padding: "1rem",
@@ -51,7 +55,6 @@ export default class SimpleCardGame extends React.Component {
             stars: '',
             image: ''
         };
-        this.handleConfirm = this.handleConfirm.bind(this);
         this.handleClearForm = this.handleClearForm.bind(this);
         this.handleName = this.handleName.bind(this);
         this.handleDescription = this.handleDescription.bind(this);
@@ -61,8 +64,14 @@ export default class SimpleCardGame extends React.Component {
         this.handleImage = this.handleImage.bind(this);
     }
 
-    handleConfirm() {
-        alert("Sucesso");
+    downloadCardGame() {
+        toJpeg(document.getElementById('cardGame'), { quality: 1 })
+            .then(function (dataUrl) {
+                var link = document.createElement('a');
+                link.download = 'simple-card-game.jpeg';
+                link.href = dataUrl;
+                link.click();
+        });
     }
 
     handleClearForm() {
@@ -104,24 +113,24 @@ export default class SimpleCardGame extends React.Component {
         return (
             <div style={style}>
                 <Grid container spacing={1}>
-                    <Grid name="cardGame" item xs={3}>
-                        <Stage width="500" height="800">
+                    <Grid id="cardGame" item xs={3}>
+                        <Stage width="260" height="510">
                             <Layer>
-                                <Rect name="background1"
+                                <Rect id="background1"
                                     x={10}
                                     y={10}
                                     width={250}
                                     height={500}
                                     fill="black"
                                 />
-                                <Rect name="background2"
+                                <Rect id="background2"
                                     x={20}
                                     y={20}
                                     width={230}
                                     height={480}
                                     fill="blue"
                                 />
-                                <Rect name="name"
+                                <Rect id="name"
                                     x={20}
                                     y={20}
                                     width={230}
@@ -131,7 +140,7 @@ export default class SimpleCardGame extends React.Component {
                                 <Label x={22} y={22}>
                                     <Text text={this.state.name} />
                                 </Label>
-                                <Rect name="image"
+                                <Rect id="image"
                                     x={20}
                                     y={60}
                                     width={230}
@@ -141,7 +150,7 @@ export default class SimpleCardGame extends React.Component {
                                 <Label x={22} y={62}>
                                     <Text text="Imagem do Card Game" />
                                 </Label>
-                                <Rect name="stars"
+                                <Rect id="stars"
                                     x={20}
                                     y={250}
                                     width={230}
@@ -151,7 +160,7 @@ export default class SimpleCardGame extends React.Component {
                                 <Label x={22} y={252}>
                                     <Text text={this.state.stars} />
                                 </Label>
-                                <Rect name="description"
+                                <Rect id="description"
                                     x={20}
                                     y={290}
                                     width={230}
@@ -161,7 +170,7 @@ export default class SimpleCardGame extends React.Component {
                                 <Label x={22} y={292}>
                                     <Text text={this.state.description} />
                                 </Label>
-                                <Rect name="attack"
+                                <Rect id="attack"
                                     x={20}
                                     y={440}
                                     width={115}
@@ -170,7 +179,7 @@ export default class SimpleCardGame extends React.Component {
                                 <Label x={22} y={442}>
                                     <Text text={`Ataque: ${this.state.attack}`} />
                                 </Label>
-                                <Rect name="defense"
+                                <Rect id="defense"
                                     x={135}
                                     y={440}
                                     width={115}
@@ -183,11 +192,11 @@ export default class SimpleCardGame extends React.Component {
                             </Layer>
                         </Stage>
                     </Grid>
-                    <Grid name="editForm" item xs={9}>
+                    <Grid id="editForm" item xs={9}>
                         <FormControl noValidate autoComplete="off">
                             <Grid container justify="center" alignItems="center">
                                 <Grid item xs={6}>
-                                    <Field title={'Digite o nome'} type={'text'} value={this.state.name} label={'Nome'} handleChange={this.handleName} />
+                                    <Field title={'Digite o nome'} type={'text'} value={this.state.id} label={'Nome'} handleChange={this.handleName} />
                                     <Field title={'Digite uma descrição'} type={'text'} value={this.state.description} label={'Descrição'} handleChange={this.handleDescription} />
                                     <Field title={'Poder de ataque'} type={'number'} value={this.state.attack} label={'Ataque'} handleChange={this.handleAttack} />
                                     <Field title={'Poder de defesa'} type={'number'} value={this.state.defense} label={'Defesa'} handleChange={this.handleDefense} />
@@ -197,7 +206,7 @@ export default class SimpleCardGame extends React.Component {
                                     <Stars value={this.state.stars} handleChange={this.handleStars} />
                                     <ButtonGroup variant="contained" color="primary">
                                         <Button onClick={this.handleClearForm}>Limpar</Button>
-                                        <Button onClick={this.handleConfirm}>Confirmar</Button>
+                                        <Button onClick={this.downloadCardGame}>Baixar</Button>
                                     </ButtonGroup>
                                 </Grid>
                             </Grid>
