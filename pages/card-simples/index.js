@@ -1,99 +1,210 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import RadioGroup from '@material-ui/core/RadioGroup'
+import Radio from '@material-ui/core/Radio'
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import { Stage, Layer, Rect, Label, Text } from "react-konva";
 
-//Componentes criados
-import Name from './content/name';
-import Description from './content/description';
-import Stars from './content/stars';
-import Power from './content/power';
-import Image from './content/image';
-import CardGame from './content/card-game';
+const style = {
+    padding: "1rem",
+};
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-    },
-    backButton: {
-        marginRight: theme.spacing(1),
-    },
-    instructions: {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
-    },
-}));
+const Field = (props) => {
+    return (
+        <div className="field">
+            <Typography variant="subtitle2" color="initial">{props.title}</Typography>
+            <TextField type={props.type} value={props.value} label={props.label} onChange={props.handleChange} variant="outlined" />
+        </div>
+    )
+}
 
-export default function CreateCardGame() {
-    const classes = useStyles();
-    const [activeStep, setActiveStep] = React.useState(0);
-    const steps = ['Nome', 'Descrição', 'Estrelas', 'Poderes', 'Imagem'];
-    let list;
+const Stars = (props) => {
+    return (
+        <div className="stars">
+            <Typography variant="subtitle2" color="initial">Adicione estrelas</Typography>
+            <RadioGroup value={props.value} onChange={props.handleChange}>
+                <FormControlLabel value={'⭐'} control={<Radio />} label='⭐' />
+                <FormControlLabel value={'⭐⭐'} control={<Radio />} label='⭐⭐' />
+                <FormControlLabel value={'⭐⭐⭐'} control={<Radio />} label='⭐⭐⭐' />
+                <FormControlLabel value={'⭐⭐⭐⭐'} control={<Radio />} label='⭐⭐⭐⭐' />
+                <FormControlLabel value={'⭐⭐⭐⭐⭐'} control={<Radio />} label='⭐⭐⭐⭐⭐' />
+            </RadioGroup>
+        </div>
+    )
+}
 
-    const getStepContent = (stepIndex) => {
-        return {
-            0: <Name />,
-            1: <Description />,
-            2: <Stars />, 
-            3: <Power />,
-            4: <Image />
-    
-        }[stepIndex];
+export default class SimpleCardGame extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            name: '',
+            description: '',
+            attack: '',
+            defense: '',
+            stars: '',
+            image: ''
+        };
+        this.handleConfirm = this.handleConfirm.bind(this);
+        this.handleClearForm = this.handleClearForm.bind(this);
+        this.handleName = this.handleName.bind(this);
+        this.handleDescription = this.handleDescription.bind(this);
+        this.handleAttack = this.handleAttack.bind(this);
+        this.handleDefense = this.handleDefense.bind(this);
+        this.handleStars = this.handleStars.bind(this);
+        this.handleImage = this.handleImage.bind(this);
     }
 
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
+    handleConfirm() {
+        alert("Sucesso");
+    }
 
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
+    handleClearForm() {
+        this.setState({
+            name: '',
+            description: '',
+            attack: '',
+            defense: '',
+            stars: '',
+            image: ''
+        });
+    }
 
-    const handleReset = () => {
-        setActiveStep(0);
-    };
+    handleName(event) {
+        this.setState({ name: event.target.value });
+    }
 
-    return (
-        <div className={classes.root}>
-            <Grid container spacing={1} m={2}>
-                <Grid item xs={3}>
-                    <CardGame />
+    handleDescription(event) {
+        this.setState({ description: event.target.value });
+    }
+
+    handleAttack(event) {
+        this.setState({ attack: event.target.value });
+    }
+
+    handleDefense(event) {
+        this.setState({ defense: event.target.value });
+    }
+
+    handleStars(event) {
+        this.setState({ stars: event.target.value });
+    }
+
+    handleImage(event) {
+        this.setState({ image: event.target.value });
+    }
+
+    render() {
+        return (
+            <div style={style}>
+                <Grid container spacing={1}>
+                    <Grid name="cardGame" item xs={3}>
+                        <Stage width="500" height="800">
+                            <Layer>
+                                <Rect name="background1"
+                                    x={10}
+                                    y={10}
+                                    width={250}
+                                    height={500}
+                                    fill="black"
+                                />
+                                <Rect name="background2"
+                                    x={20}
+                                    y={20}
+                                    width={230}
+                                    height={480}
+                                    fill="blue"
+                                />
+                                <Rect name="name"
+                                    x={20}
+                                    y={20}
+                                    width={230}
+                                    height={40}
+                                    fill="lightBlue"
+                                />
+                                <Label x={22} y={22}>
+                                    <Text text={this.state.name} />
+                                </Label>
+                                <Rect name="image"
+                                    x={20}
+                                    y={60}
+                                    width={230}
+                                    height={200}
+                                    fill="yellow"
+                                />
+                                <Label x={22} y={62}>
+                                    <Text text="Imagem do Card Game" />
+                                </Label>
+                                <Rect name="stars"
+                                    x={20}
+                                    y={250}
+                                    width={230}
+                                    height={40}
+                                    fill="white"
+                                />
+                                <Label x={22} y={252}>
+                                    <Text text={this.state.stars} />
+                                </Label>
+                                <Rect name="description"
+                                    x={20}
+                                    y={290}
+                                    width={230}
+                                    height={150}
+                                    fill="red"
+                                />
+                                <Label x={22} y={292}>
+                                    <Text text={this.state.description} />
+                                </Label>
+                                <Rect name="attack"
+                                    x={20}
+                                    y={440}
+                                    width={115}
+                                    height={60}
+                                    fill="green"></Rect>
+                                <Label x={22} y={442}>
+                                    <Text text={`Ataque: ${this.state.attack}`} />
+                                </Label>
+                                <Rect name="defense"
+                                    x={135}
+                                    y={440}
+                                    width={115}
+                                    height={60}
+                                    fill="pink"
+                                />
+                                <Label x={137} y={442}>
+                                    <Text text={`Defesa: ${this.state.defense}`} />
+                                </Label>
+                            </Layer>
+                        </Stage>
+                    </Grid>
+                    <Grid name="editForm" item xs={9}>
+                        <FormControl noValidate autoComplete="off">
+                            <Grid container justify="center" alignItems="center">
+                                <Grid item xs={6}>
+                                    <Field title={'Digite o nome'} type={'text'} value={this.state.name} label={'Nome'} handleChange={this.handleName} />
+                                    <Field title={'Digite uma descrição'} type={'text'} value={this.state.description} label={'Descrição'} handleChange={this.handleDescription} />
+                                    <Field title={'Poder de ataque'} type={'number'} value={this.state.attack} label={'Ataque'} handleChange={this.handleAttack} />
+                                    <Field title={'Poder de defesa'} type={'number'} value={this.state.defense} label={'Defesa'} handleChange={this.handleDefense} />
+                                    <Field title={'Imagem do Card Game'} type={'file'} value={this.state.image} handleChange={this.handleImage} />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Stars value={this.state.stars} handleChange={this.handleStars} />
+                                    <ButtonGroup variant="contained" color="primary">
+                                        <Button onClick={this.handleClearForm}>Limpar</Button>
+                                        <Button onClick={this.handleConfirm}>Confirmar</Button>
+                                    </ButtonGroup>
+                                </Grid>
+                            </Grid>
+                        </FormControl>
+                    </Grid>
                 </Grid>
-                <Grid item xs={9}>
-                    <Stepper activeStep={activeStep} alternativeLabel>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                    <div>
-                        {activeStep === steps.length ? (
-                            <div>
-                                <Typography className={classes.instructions}>Fim. Gere seu Card Game agora</Typography>
-                                <Button onClick={handleReset}>Criar outro Card Game</Button>
-                            </div>
-                        ) : (
-                                <div name="description">
-                                    {getStepContent(activeStep)}
-                                    <div name="handleButtons">
-                                        <Button
-                                            disabled={activeStep === 0}
-                                            onClick={handleBack}
-                                            className={classes.backButton}>Voltar</Button>
-                                        <Button variant="contained" color="primary" onClick={handleNext}>
-                                            {activeStep === steps.length - 1 ? 'Finalizar' : 'Prosseguir'}
-                                        </Button>
-                                    </div>
-                                </div>
-                            )}
-                    </div>
-                </Grid>
-            </Grid>
-        </div>
-    );
+            </div>
+        )
+    }
 }
