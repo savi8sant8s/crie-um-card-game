@@ -12,6 +12,8 @@ import useImage from 'use-image';
 
 const style = {
     padding: "1rem",
+    color:"white",
+    background: "linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12)"
 };
 
 const Field = (props) => {
@@ -19,6 +21,7 @@ const Field = (props) => {
         <div className="field">
             <Typography variant="subtitle2" color="initial">{props.title}</Typography>
             <TextField
+                InputLabelProps={{ shrink: true }}
                 name={props.name}
                 rows={props.rows}
                 type={props.type}
@@ -26,7 +29,7 @@ const Field = (props) => {
                 multiline={props.multiline}
                 label={props.label}
                 onChange={props.handleChange}
-                variant="outlined"/>
+                variant="filled"/>
         </div>
     )
 }
@@ -60,7 +63,7 @@ export default class App extends React.Component {
     }
 
     downloadCardGame() {
-        toJpeg(document.getElementById('cardGame'), { quality: 1 })
+        toJpeg(document.getElementById('cardGame'), { quality: 1, width:"350", height:"500" })
             .then(function (dataUrl) {
                 let
                  link = document.createElement('a');
@@ -87,19 +90,32 @@ export default class App extends React.Component {
     }
 
     handleDescription(event) {
-        this.setState({ description: event.target.value.slice(0, 135) });
+        let value = event.target.value;
+        let iter = Math.floor(value.length/35);
+        for (let x = 1; x <= iter; x++) {
+            value = value.slice(0, x*35) + '\n' + value.slice(x*35 + 1, value.length);
+        }
+        this.setState({ description: value.slice(0, 220) });
     }
 
     handlePower(event) {
-        this.setState({ [event.target.name]: event.target.value.slice(0,5) });
+        let power = event.target.value;
+        if (power > 10000){
+            power = 10000;
+        }
+        this.setState({ [event.target.name]: power });
     }
 
     handleStars(event) {
         let stars = '';
-        for (let x = 0; x < event.target.value; x++) {
+        let countStars = event.target.value;
+        if (countStars > 12){
+            countStars = 12;
+        }
+        for (let x = 0; x < countStars; x++) {
             stars += '⭐';
         }
-        this.setState({ countStars: event.target.value, stars: stars });
+        this.setState({ countStars: countStars, stars: stars });
     }
 
     handleImage(event) {
@@ -118,10 +134,10 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <div style={style}>
-                <Typography variant="h4" align={"center"}>Card Simples</Typography>
-                <Grid container alignContent={"center"} alignItems={"center"} justify={"center"} spacing={1}>
-                    <Grid id="cardGame" item xs>
+            <div style={style} align={"center"}>
+                <Typography variant="h4">Card Simples</Typography>
+                <Grid container spacing={2} xs>
+                    <Grid id="cardGame" item>
                         <Stage width="350" height="500">
                             <Layer>
                                 <Rect id="background1"
@@ -168,7 +184,7 @@ export default class App extends React.Component {
                                     fill={"#007acc"}
                                 />
                                 <Label x={25} y={305}>
-                                    <Text fontSize={20} fill={"#ffffff"} text={this.state.description} />
+                                    <Text fontSize={15} fill={"#ffffff"} text={this.state.description} />
                                 </Label>
                                 <Rect id="attack"
                                     x={20}
@@ -193,22 +209,26 @@ export default class App extends React.Component {
                                 </Label>
                             </Layer>
                         </Stage>
-                        <Grid item xs>
-                            <Fab variant="extended" onClick={this.handleClearForm} color="light" aria-label="add">
-                                Limpar <ClearIcon />
-                            </Fab>
-                            <Fab variant="extended" onClick={this.downloadCardGame} color="primary" aria-label="add">
-                                Baixar <GetAppIcon />
-                            </Fab>
+                        <Grid id="buttons" container xs>
+                            <Grid item xs={6}>
+                                <Fab variant="extended" onClick={this.handleClearForm} color={"light"}>
+                                    Limpar <ClearIcon />
+                                </Fab>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Fab variant="extended" onClick={this.downloadCardGame} color={"primary"}>
+                                    Baixar <GetAppIcon />
+                                </Fab>
+                            </Grid>
                         </Grid>
                     </Grid>
                     <Grid id="form" item xs>
                         <FormControl noValidate autoComplete="off">
                             <Grid container justify="center" alignItems="center">
-                                <Grid item xs={6}>
+                                <Grid item xs>
                                     <Field
                                         name={'name'}
-                                        title={'Digite o nome'}
+                                        title={'Digite um nome'}
                                         type={'text'}
                                         value={this.state.id}
                                         label={'Nome'}
@@ -226,14 +246,14 @@ export default class App extends React.Component {
                                         handleChange={this.handleDescription} />
                                     <Field
                                         name={'attack'}
-                                        title={'Poder de ataque'}
+                                        title={'Adicione poder de ataque'}
                                         type={'number'}
                                         value={this.state.attack}
                                         label={'Ataque'}
                                         handleChange={this.handlePower} />
                                     <Field
                                         name={'defense'}
-                                        title={'Poder de defesa'}
+                                        title={'Adicione poder de defesa'}
                                         type={'number'}
                                         value={this.state.defense}
                                         label={'Defesa'}
@@ -247,7 +267,7 @@ export default class App extends React.Component {
                                         handleChange={this.handleStars} />
                                     <Field
                                         name={'image'}
-                                        title={'Imagem do Card'}
+                                        title={'Imagem do Card Game'}
                                         type={'file'}
                                         handleChange={this.handleImage} />
                                 </Grid>
