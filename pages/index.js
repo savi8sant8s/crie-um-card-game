@@ -1,8 +1,9 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import ClearIcon from '@material-ui/icons/Clear';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import { Stage, Layer, Rect, Label, Text, Image } from "react-konva";
@@ -17,7 +18,15 @@ const Field = (props) => {
     return (
         <div className="field">
             <Typography variant="subtitle2" color="initial">{props.title}</Typography>
-            <TextField type={props.type} value={props.value} multiline={props.multiline} label={props.label} onChange={props.handleChange} variant="outlined" />
+            <TextField
+                name={props.name}
+                rows={props.rows}
+                type={props.type}
+                value={props.value}
+                multiline={props.multiline}
+                label={props.label}
+                onChange={props.handleChange}
+                variant="outlined"/>
         </div>
     )
 }
@@ -45,20 +54,20 @@ export default class App extends React.Component {
         this.handleClearForm = this.handleClearForm.bind(this);
         this.handleName = this.handleName.bind(this);
         this.handleDescription = this.handleDescription.bind(this);
-        this.handleAttack = this.handleAttack.bind(this);
-        this.handleDefense = this.handleDefense.bind(this);
+        this.handlePower = this.handlePower.bind(this);
         this.handleStars = this.handleStars.bind(this);
         this.handleImage = this.handleImage.bind(this);
     }
 
     downloadCardGame() {
-        toJpeg(document.getElementById('cardGame'), { quality: 1})
+        toJpeg(document.getElementById('cardGame'), { quality: 1 })
             .then(function (dataUrl) {
-                var link = document.createElement('a');
+                let
+                 link = document.createElement('a');
                 link.download = 'simple-card-game.jpeg';
                 link.href = dataUrl;
                 link.click();
-        });
+            });
     }
 
     handleClearForm() {
@@ -74,24 +83,20 @@ export default class App extends React.Component {
     }
 
     handleName(event) {
-        this.setState({ name: event.target.value });
+        this.setState({ name: event.target.value.slice(0,25) });
     }
 
     handleDescription(event) {
-        this.setState({ description: event.target.value });
+        this.setState({ description: event.target.value.slice(0, 135) });
     }
 
-    handleAttack(event) {
-        this.setState({ attack: event.target.value });
-    }
-
-    handleDefense(event) {
-        this.setState({ defense: event.target.value });
+    handlePower(event) {
+        this.setState({ [event.target.name]: event.target.value.slice(0,5) });
     }
 
     handleStars(event) {
         let stars = '';
-        for (let x = 0; x < event.target.value; x++){
+        for (let x = 0; x < event.target.value; x++) {
             stars += '⭐';
         }
         this.setState({ countStars: event.target.value, stars: stars });
@@ -115,22 +120,22 @@ export default class App extends React.Component {
         return (
             <div style={style}>
                 <Typography variant="h4" align={"center"}>Card Simples</Typography>
-                <Grid container alignContent={"center"} alignItems={"center"}>
-                    <Grid id="cardGame" item xs={6}>
-                        <Stage width="260" height="510">
+                <Grid container alignContent={"center"} alignItems={"center"} justify={"center"} spacing={1}>
+                    <Grid id="cardGame" item xs>
+                        <Stage width="350" height="500">
                             <Layer>
                                 <Rect id="background1"
                                     x={10}
                                     y={10}
-                                    width={250}
-                                    height={500}
+                                    width={330}
+                                    height={480}
                                     fill={"#6699ff"}
                                     cornerRadius={[0, 15, 0, 15]}
                                 />
                                 <Rect id="name"
                                     x={20}
                                     y={20}
-                                    width={230}
+                                    width={310}
                                     height={40}
                                     fill={"#ccddff"}
                                 />
@@ -140,71 +145,111 @@ export default class App extends React.Component {
                                 <Rect id="image"
                                     x={20}
                                     y={60}
-                                    width={230}
+                                    width={310}
                                     height={200}
                                     fill={"#ffffff"}
                                 />
+                                <CustomImage image={this.state.image} x={20} y={60} width={310} height={200} />
                                 <Rect id="stars"
                                     x={20}
-                                    y={250}
-                                    width={230}
+                                    y={260}
+                                    width={310}
                                     height={40}
                                     fill={"#ccddff"}
                                 />
-                                <Label x={25} y={255}>
+                                <Label x={25} y={265}>
                                     <Text fontSize={20} text={this.state.stars} />
                                 </Label>
                                 <Rect id="description"
                                     x={20}
-                                    y={290}
-                                    width={230}
-                                    height={150}
+                                    y={300}
+                                    width={310}
+                                    height={120}
                                     fill={"#007acc"}
                                 />
-                                <Label x={25} y={295}>
-                                <Text fontSize={20} fill={"#ffffff"} text={this.state.description} />
+                                <Label x={25} y={305}>
+                                    <Text fontSize={20} fill={"#ffffff"} text={this.state.description} />
                                 </Label>
                                 <Rect id="attack"
                                     x={20}
-                                    y={440}
-                                    width={115}
+                                    y={420}
+                                    width={155}
                                     height={60}
-                                    fill={"#ff4d94"}/>
-                                <Label x={25} y={445}>
+                                    fill={"#ff4d94"} />
+                                <Label x={25} y={425}>
                                     <Text fontSize={20} fill={"#ffffff"} text={"Ataque:"} />
                                     <Text fontSize={20} fill={"#ffc34d"} text={`\n ${this.state.attack}`} />
                                 </Label>
                                 <Rect id="defense"
-                                    x={135}
-                                    y={440}
-                                    width={115}
+                                    x={175}
+                                    y={420}
+                                    width={155}
                                     height={60}
                                     fill={"#ffc34d"}
                                 />
-                                <Label x={139} y={445}>
-                                <Text fontSize={20} fill={"#ffffff"} text={"Defesa:"} />
+                                <Label x={180} y={425}>
+                                    <Text fontSize={20} fill={"#ffffff"} text={"Defesa:"} />
                                     <Text fontSize={20} fill={"#ff4d94"} text={`\n ${this.state.defense}`} />
                                 </Label>
-                                <CustomImage image={this.state.image} x={20} y={60} width={230} height={190} />
                             </Layer>
                         </Stage>
+                        <Grid item xs>
+                            <Fab variant="extended" onClick={this.handleClearForm} color="light" aria-label="add">
+                                Limpar <ClearIcon />
+                            </Fab>
+                            <Fab variant="extended" onClick={this.downloadCardGame} color="primary" aria-label="add">
+                                Baixar <GetAppIcon />
+                            </Fab>
+                        </Grid>
                     </Grid>
-                    <Grid id="form" item xs={6}>
+                    <Grid id="form" item xs>
                         <FormControl noValidate autoComplete="off">
                             <Grid container justify="center" alignItems="center">
                                 <Grid item xs={6}>
-                                    <Field title={'Digite o nome'} type={'text'} value={this.state.id} label={'Nome'} handleChange={this.handleName} />
-                                    <Field title={'Digite uma descrição'} multiline type={'text'} value={this.state.description} label={'Descrição'} handleChange={this.handleDescription} />
-                                    <Field title={'Poder de ataque'} type={'number'} value={this.state.attack} label={'Ataque'} handleChange={this.handleAttack} />
-                                    <Field title={'Poder de defesa'} type={'number'} value={this.state.defense} label={'Defesa'} handleChange={this.handleDefense} />
-                                    <Field title={'Quantidade de estrelas'} type={'number'} value={this.state.countStars} label={'Estrelas'} handleChange={this.handleStars} />
-                                    <Field title={'Imagem do Card'} type={'file'} handleChange={this.handleImage} />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <ButtonGroup variant="contained" color="primary">
-                                        <Button onClick={this.handleClearForm}>Limpar</Button>
-                                        <Button onClick={this.downloadCardGame}>Baixar</Button>
-                                    </ButtonGroup>
+                                    <Field
+                                        name={'name'}
+                                        title={'Digite o nome'}
+                                        type={'text'}
+                                        value={this.state.id}
+                                        label={'Nome'}
+                                        maxLength={27}
+                                        handleChange={this.handleName} />
+                                    <Field
+                                        name={'description'}
+                                        title={'Digite uma descrição'}
+                                        multiline
+                                        rows={5}
+                                        type={'text'}
+                                        value={this.state.description}
+                                        label={'Descrição'}
+                                        maxLength={135}
+                                        handleChange={this.handleDescription} />
+                                    <Field
+                                        name={'attack'}
+                                        title={'Poder de ataque'}
+                                        type={'number'}
+                                        value={this.state.attack}
+                                        label={'Ataque'}
+                                        handleChange={this.handlePower} />
+                                    <Field
+                                        name={'defense'}
+                                        title={'Poder de defesa'}
+                                        type={'number'}
+                                        value={this.state.defense}
+                                        label={'Defesa'}
+                                        handleChange={this.handlePower} />
+                                    <Field
+                                        name={'stars'}
+                                        title={'Quantidade de estrelas'}
+                                        type={'number'}
+                                        value={this.state.countStars}
+                                        label={'Estrelas'}
+                                        handleChange={this.handleStars} />
+                                    <Field
+                                        name={'image'}
+                                        title={'Imagem do Card'}
+                                        type={'file'}
+                                        handleChange={this.handleImage} />
                                 </Grid>
                             </Grid>
                         </FormControl>
