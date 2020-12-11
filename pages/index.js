@@ -4,14 +4,13 @@ import TextField from '@material-ui/core/TextField';
 import Fab from '@material-ui/core/Fab';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ClearIcon from '@material-ui/icons/Clear';
+import AddIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import { Stage, Layer, Rect, Label, Text, Image } from "react-konva";
-import { toJpeg } from 'html-to-image';
 import useImage from 'use-image';
 
 const style = {
-    padding: "1rem",
     color:"white",
     background: "linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12)"
 };
@@ -22,7 +21,9 @@ const Field = (props) => {
             <Typography variant="subtitle2" color="initial">{props.title}</Typography>
             <TextField
                 InputLabelProps={{ shrink: true }}
+                margin={'normal'}
                 name={props.name}
+                style={{display: props.display, color:"white"}}
                 rows={props.rows}
                 type={props.type}
                 value={props.value}
@@ -63,14 +64,7 @@ export default class App extends React.Component {
     }
 
     downloadCardGame() {
-        toJpeg(document.getElementById('cardGame'), { quality: 1, width:"350", height:"500" })
-            .then(function (dataUrl) {
-                let
-                 link = document.createElement('a');
-                link.download = 'simple-card-game.jpeg';
-                link.href = dataUrl;
-                link.click();
-            });
+       
     }
 
     handleClearForm() {
@@ -120,6 +114,7 @@ export default class App extends React.Component {
 
     handleImage(event) {
         event.preventDefault();
+        console.log("entrou")
 
         if (event.target.files[0]) {
             let reader = new FileReader();
@@ -135,10 +130,10 @@ export default class App extends React.Component {
     render() {
         return (
             <div style={style} align={"center"}>
-                <Typography variant="h4">Card Simples</Typography>
+                <Typography variant="h4">Crie um Card Game Simples</Typography>
                 <Grid container spacing={2} xs>
-                    <Grid id="cardGame" item>
-                        <Stage width="350" height="500">
+                    <Grid item xs>
+                        <Stage id="cardGame" width="350" height="500">
                             <Layer>
                                 <Rect id="background1"
                                     x={10}
@@ -209,18 +204,12 @@ export default class App extends React.Component {
                                 </Label>
                             </Layer>
                         </Stage>
-                        <Grid id="buttons" container xs>
-                            <Grid item xs={6}>
-                                <Fab variant="extended" onClick={this.handleClearForm} color={"light"}>
-                                    Limpar <ClearIcon />
-                                </Fab>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Fab variant="extended" onClick={this.downloadCardGame} color={"primary"}>
-                                    Baixar <GetAppIcon />
-                                </Fab>
-                            </Grid>
-                        </Grid>
+                        <Fab style={{ margin: '0.2rem' }} variant="extended" onClick={this.handleClearForm} color={"light"}>
+                            Limpar <ClearIcon />
+                        </Fab>
+                        <Fab style={{ margin: '0.2rem' }} variant="extended" onClick={this.downloadCardGame} color={"primary"}>
+                            Baixar <GetAppIcon />
+                        </Fab>
                     </Grid>
                     <Grid id="form" item xs>
                         <FormControl noValidate autoComplete="off">
@@ -228,48 +217,42 @@ export default class App extends React.Component {
                                 <Grid item xs>
                                     <Field
                                         name={'name'}
-                                        title={'Digite um nome'}
                                         type={'text'}
-                                        value={this.state.id}
-                                        label={'Nome'}
+                                        value={this.state.name}
+                                        label={'Adicione um nome legal'}
                                         maxLength={27}
                                         handleChange={this.handleName} />
                                     <Field
                                         name={'description'}
-                                        title={'Digite uma descrição'}
                                         multiline
-                                        rows={5}
+                                        rows={3}
+                                        label={'Capricha na descrição'}
                                         type={'text'}
                                         value={this.state.description}
-                                        label={'Descrição'}
                                         maxLength={135}
                                         handleChange={this.handleDescription} />
                                     <Field
                                         name={'attack'}
-                                        title={'Adicione poder de ataque'}
                                         type={'number'}
                                         value={this.state.attack}
-                                        label={'Ataque'}
+                                        label={'Adicione poder de ataque'}
                                         handleChange={this.handlePower} />
                                     <Field
                                         name={'defense'}
-                                        title={'Adicione poder de defesa'}
                                         type={'number'}
                                         value={this.state.defense}
-                                        label={'Defesa'}
+                                        label={'Adicione poder de defesa'}
                                         handleChange={this.handlePower} />
                                     <Field
                                         name={'stars'}
-                                        title={'Quantidade de estrelas'}
                                         type={'number'}
                                         value={this.state.countStars}
-                                        label={'Estrelas'}
+                                        label={'Adicione estrelas'}
                                         handleChange={this.handleStars} />
-                                    <Field
-                                        name={'image'}
-                                        title={'Imagem do Card Game'}
-                                        type={'file'}
-                                        handleChange={this.handleImage} />
+                                    <Fab style={{ margin: '0.2rem' }} variant="contained" component="label" color={"secondary"}>
+                                        Adicionar imagem<AddIcon />
+                                        <input onChange={this.handleImage} type="file" style={{ display: "none" }} />
+                                    </Fab>
                                 </Grid>
                             </Grid>
                         </FormControl>
