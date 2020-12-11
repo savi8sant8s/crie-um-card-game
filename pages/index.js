@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import { Stage, Layer, Rect, Label, Text, Image } from "react-konva";
 import useImage from 'use-image';
+import domtoimage from 'dom-to-image';
 
 const style = {
     color:"white",
@@ -64,7 +65,13 @@ export default class App extends React.Component {
     }
 
     downloadCardGame() {
-       
+        domtoimage.toPng(document.getElementById('cardGame'), { quality: 0.95})
+        .then(function (dataUrl) {
+            var link = document.createElement('a');
+            link.download = 'simple-card-game.png';
+            link.href = dataUrl;
+            link.click();
+        });
     }
 
     handleClearForm() {
@@ -132,8 +139,8 @@ export default class App extends React.Component {
             <div style={style} align={"center"}>
                 <Typography variant="h4">Crie um Card Game Simples</Typography>
                 <Grid container spacing={2} xs>
-                    <Grid item xs>
-                        <Stage id="cardGame" width="350" height="500">
+                    <Grid id="cardGame" item xs>
+                        <Stage width="350" height="500">
                             <Layer>
                                 <Rect id="background1"
                                     x={10}
