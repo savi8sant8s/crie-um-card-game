@@ -9,18 +9,13 @@ import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import { Stage, Layer, Rect, Label, Text, Image } from "react-konva";
 import useImage from 'use-image';
-import domtoimage from 'dom-to-image';
-
-const style = {
-    color:"white",
-    background: "linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12)"
-};
 
 const Field = (props) => {
     return (
         <div className="field">
             <Typography variant="subtitle2" color="initial">{props.title}</Typography>
             <TextField
+                color={"secondary"}
                 InputLabelProps={{ shrink: true }}
                 margin={'normal'}
                 name={props.name}
@@ -54,8 +49,11 @@ export default class App extends React.Component {
             attack: '',
             defense: '',
             stars: '',
-            image: ''
+            image: '',
         };
+        this.ref = React.createRef();
+
+        this.handleExport = this.handleExport.bind(this);
         this.handleClearForm = this.handleClearForm.bind(this);
         this.handleName = this.handleName.bind(this);
         this.handleDescription = this.handleDescription.bind(this);
@@ -64,15 +62,19 @@ export default class App extends React.Component {
         this.handleImage = this.handleImage.bind(this);
     }
 
-    downloadCardGame() {
-        domtoimage.toPng(document.getElementById('cardGame'), { quality: 0.95})
-        .then(function (dataUrl) {
-            var link = document.createElement('a');
-            link.download = 'simple-card-game.png';
-            link.href = dataUrl;
-            link.click();
-        });
+    downloadURI(uri, name) {
+        var link = document.createElement('a');
+        link.download = name;
+        link.href = uri;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
+
+    handleExport() {
+        const uri = this.ref.current.toDataURL();
+        this.downloadURI(uri, 'simple-card-game.png');
+    };
 
     handleClearForm() {
         this.setState({
@@ -136,11 +138,11 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <div style={style} align={"center"}>
+            <div className="simpleCardGame" align={"center"}>
                 <Typography variant="h4">Crie um Card Game Simples</Typography>
-                <Grid container spacing={2} xs>
-                    <Grid id="cardGame" item xs>
-                        <Stage width="350" height="500">
+                <Grid container spacing={2} alignItems={"center"} alignContent={"center"} justify={"center"}>
+                    <Grid id="cardGame" item xs> 
+                        <Stage width="350" height="500" ref={this.ref}>
                             <Layer>
                                 <Rect id="background1"
                                     x={10}
@@ -214,7 +216,7 @@ export default class App extends React.Component {
                         <Fab style={{ margin: '0.2rem' }} variant="extended" onClick={this.handleClearForm} color={"light"}>
                             Limpar <ClearIcon />
                         </Fab>
-                        <Fab style={{ margin: '0.2rem' }} variant="extended" onClick={this.downloadCardGame} color={"primary"}>
+                        <Fab style={{ margin: '0.2rem' }} variant="extended" onClick={this.handleExport} color={"primary"}>
                             Baixar <GetAppIcon />
                         </Fab>
                     </Grid>
@@ -233,7 +235,7 @@ export default class App extends React.Component {
                                         name={'description'}
                                         multiline
                                         rows={3}
-                                        label={'Capricha na descrição'}
+                                        label={'Capriche na descrição'}
                                         type={'text'}
                                         value={this.state.description}
                                         maxLength={135}
