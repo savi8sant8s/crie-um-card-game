@@ -1,11 +1,9 @@
 # Crie um Card Game Simples
 
 ```
-Site para crie e baixar um card game customizado.
+Site para criar e baixar um card game customizado.
 ```
 ![Primeira versão](./images/first-version.png)
 
 ******
-```
-[Link do site:](https://crie-um-card-game-simples.vercel.app)
-```
+Acesse o site: [crie-um-card-game-simples.vercel.app](https://crie-um-card-game-simples.vercel.app)
