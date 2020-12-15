@@ -8,43 +8,24 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Typography from "@material-ui/core/Typography";
-import { Stage, Layer, Rect, Label, Text, Image } from "react-konva";
-import useImage from "use-image";
+import { Stage, Layer, Rect, Label, Text } from "react-konva";
 
 const styles = {
-    black: {
-        color: "black"
+    golden: {
+        color: "gold"
     },
     red: {
         color: "red"
     },
     margin: {
-        margin: "0.5rem"
+        margin: "1rem"
     }
 };
 
-const icons = {
-    heart: {
-        red:require("../images/baralho/heart-red.png"),
-        black: require("../images/baralho/heart-black.png")
-    },
-    losango: {
-        red: require("../images/baralho/losango-red.png"),
-        black: require("../images/baralho/losango-black.png")
-    },
-    sword: {
-        red:require("../images/baralho/sword-red.png"),
-        black: require("../images/baralho/sword-black.png")
-    },
-    stick: {
-        red: require("../images/baralho/stick-red.png"),
-        black: require("../images/baralho/stick-black.png")
-    }
-}
-
-const CardValueOptions = (props) => {
+const ValueOptions = (props) => {
     let cardsGroup1 = ["A", "2", "3", "4", "5"];
     let cardsGroup2 = ["6", "7", "8", "9", "10"];
+    let cardsGroup3 = ["J", "K", "Q", "JK"];
 
     return (
         <div>
@@ -59,78 +40,91 @@ const CardValueOptions = (props) => {
                     return <Button onClick={props.handleChange} style={styles.margin}>{item}</Button>
                 })}
             </ButtonGroup>
+            <ButtonGroup onClick={props.handleChange} orientation={"vertical"} variant={"contained"}>
+                {cardsGroup3.map(function (item, i) {
+                    return <Button onClick={props.handleChange} style={styles.margin}>{item}</Button>
+                })}
+            </ButtonGroup>
         </div>
     )
 }
 
-const CardIconOptions = (props) => {
+const IconOptions = (props) => {
 
     return (
         <div>
             <Typography variant={"h6"}>Clique no ícone que deseja</Typography>
             <RadioGroup value={props.value} onChange={props.handleChange}>
-                <Grid item xs style={styles.black}>
-                    <FormControlLabel value={"heartBlack"} control={<Radio />} label={"♥"} />
-                    <FormControlLabel value={"losangoBlack"} control={<Radio />} label={"♦"} />
-                    <FormControlLabel value={"swordBlack"} control={<Radio />} label={"♠"} />
-                    <FormControlLabel value={"stickBlack"} control={<Radio />} label={"♣"} />
-                </Grid>
-                <Grid item xs style={styles.red}>
-                    <FormControlLabel value={"heartRed"} control={<Radio />} label={"♥"} />
-                    <FormControlLabel value={"losangoRed"} control={<Radio />} label={"♦"} />
-                    <FormControlLabel value={"swordRed"} control={<Radio />} label={"♠"} />
-                    <FormControlLabel value={"stickRed"} control={<Radio />} label={"♣"} />
+                <Grid item xs style={styles.golden}>
+                    <FormControlLabel value={"♥"} control={<Radio />} label={"♥"} />
+                    <FormControlLabel value={"♦"} control={<Radio />} label={"♦"} />
+                    <FormControlLabel value={"♠"} control={<Radio />} label={"♠"} />
+                    <FormControlLabel value={"♣"} control={<Radio />} label={"♣"} />
                 </Grid>
             </RadioGroup>
         </div>
     )
 }
 
-const CustomImage = (props) => {
-    const [image] = useImage(props.image);
+const ColorOptions = (props) => {
+
     return (
-        <Image image={image} x={props.x} y={props.y} width={props.width} height={props.height} />
-    );
+        <div>
+            <Typography variant={"h6"}>Clique no ícone que deseja</Typography>
+            <RadioGroup value={props.value} onChange={props.handleChange}>
+                <Grid item xs>
+                    <FormControlLabel style={{color: "black"}} value={"black"} control={<Radio />} label={"Preto"} />
+                    <FormControlLabel style={{color: "red"}} value={"red"} control={<Radio />} label={"Vermelho"} />
+                </Grid>
+            </RadioGroup>
+        </div>
+    )
 }
 
 export default class BaralhoCardGame extends React.Component {
-
     constructor(props) {
         super(props);
 
         this.state = {
-            value: "A",
-            icon: icons.heart.red,
-            iconValue: "heartRed",
-            color: "red",
-            iconPositions: {
-                A: [{ x: 155, y: 235 }],
-                2: [{ x: 155, y: 90 },{ x: 155, y: 370 }],
-                3: [{ x: 155, y: 90 },{ x: 155, y: 235 },{ x: 155, y: 370 }],
-                4: [{ x: 80, y: 90 },{ x: 230, y: 90 },{ x: 80, y: 370 },{ x: 230, y: 370 }],
-                5: [{ x: 80, y: 90 },{ x: 230, y: 90 },{ x: 80, y: 370 },{ x: 230, y: 370 },
-                    { x: 155, y: 235 }],
-                6: [{ x: 80, y: 90 },{ x: 230, y: 90 },{ x: 80, y: 370 },{ x: 230, y: 370 },
-                    { x: 80, y: 235 },{ x: 230, y: 235 }],
-                7: [{ x: 80, y: 90 },{ x: 230, y: 90 },{ x: 80, y: 370 },{ x: 230, y: 370 },
-                      { x: 80, y: 235 },{ x: 230, y: 235 },{ x: 155, y: 235 }],
-                8: [{ x: 80, y: 90 },{ x: 230, y: 90 },{ x: 80, y: 180 },{ x: 230, y: 180 },{ x: 80, y: 280 },
-                    { x: 230, y: 280 },{ x: 80, y: 370 },{ x: 230, y: 370 }],
-                9: [{ x: 80, y: 90 },{ x: 230, y: 90 },{ x: 80, y: 180 },{ x: 230, y: 180 },{ x: 80, y: 280 },
-                    { x: 230, y: 280 },{ x: 80, y: 370 },{ x: 230, y: 370 },{ x: 155, y: 235 }],
-                10: [{ x: 80, y: 90 },{ x: 230, y: 90 },{ x: 80, y: 160 },{ x: 230, y: 160 },{ x: 80, y: 230 },
-                    { x: 230, y: 230 },{ x: 80, y: 300 },{ x: 230, y: 300 },{ x: 80, y: 370 },{ x: 230, y: 370 }]
+            card: {
+                color: "red",
+                icon: "♥",
+                mainIcon: "A",
+                iconPositions: [{x: 288, y:12}, {x:60, y:488, rotation: 180},{x: 155, y:205, icon: 'α'}],
+                value: "A"
             },
-            currentIconPosition: [{ x: 155, y: 235 }] 
+            iconPositions: {
+                A: [{x: 288, y:12}, {x:60, y:488, rotation: 180},{x: 155, y:205, icon: 'α'}],
+                J: [{x: 288, y:12}, {x:60, y:488, rotation: 180},{x: 135, y:205, icon: '👸'}],
+                K: [{x: 288, y:12}, {x:60, y:488, rotation: 180},{x: 135, y:205, icon: '🤴'}],
+                Q: [{x: 288, y:12}, {x:60, y:488, rotation: 180},{x: 135, y:205, icon: '👸'}],
+                JK: [{x: 288, y:12}, {x:60, y:488, rotation: 180},{x: 135, y:205, icon: '🃏'}],
+                2: [{ x: 155, y: 90 }, { x: 155, y: 370 }],
+                3: [{ x: 155, y: 90 }, { x: 155, y: 235 }, { x: 155, y: 370 }],
+                4: [{ x: 80, y: 90 }, { x: 230, y: 90 }, { x: 80, y: 370 }, { x: 230, y: 370 }],
+                5: [{ x: 80, y: 90 }, { x: 230, y: 90 }, { x: 80, y: 370 }, { x: 230, y: 370 },
+                { x: 155, y: 235 }],
+                6: [{ x: 80, y: 90 }, { x: 230, y: 90 }, { x: 80, y: 370 }, { x: 230, y: 370 },
+                { x: 80, y: 235 }, { x: 230, y: 235 }],
+                7: [{ x: 80, y: 90 }, { x: 230, y: 90 }, { x: 80, y: 370 }, { x: 230, y: 370 },
+                { x: 80, y: 235 }, { x: 230, y: 235 }, { x: 155, y: 235 }],
+                8: [{ x: 80, y: 90 }, { x: 230, y: 90 }, { x: 80, y: 180 }, { x: 230, y: 180 }, { x: 80, y: 280 },
+                { x: 230, y: 280 }, { x: 80, y: 370 }, { x: 230, y: 370 }],
+                9: [{ x: 80, y: 90 }, { x: 230, y: 90 }, { x: 80, y: 180 }, { x: 230, y: 180 }, { x: 80, y: 280 },
+                { x: 230, y: 280 }, { x: 80, y: 370 }, { x: 230, y: 370 }, { x: 155, y: 235 }],
+                10: [{ x: 80, y: 90 }, { x: 230, y: 90 }, { x: 80, y: 160 }, { x: 230, y: 160 }, { x: 80, y: 230 },
+                { x: 230, y: 230 }, { x: 80, y: 300 }, { x: 230, y: 300 }, { x: 80, y: 370 }, { x: 230, y: 370 }]
+            }
         };
         this.ref = React.createRef();
         this.handleExport = this.handleExport.bind(this);
         this.handleValue = this.handleValue.bind(this);
         this.handleIcon = this.handleIcon.bind(this);
+        this.handleColor = this.handleColor.bind(this);
     }
 
     downloadURI(uri, name) {
-        var link = document.createElement("a");
+        let link = document.createElement("a");
         link.download = name;
         link.href = uri;
         document.body.appendChild(link);
@@ -144,32 +138,37 @@ export default class BaralhoCardGame extends React.Component {
     };
 
     handleValue(event) {
-        this.setState({ value: event.target.innerText.slice(0,2), 
-        currentIconPosition: this.state.iconPositions[event.target.innerText.slice(0,2)]});
+        let value = event.target.innerText.slice(0, 2);
+        let cardsGroup = ["A", "2", "3", "4", "5","6", "7", "8", "9", "10", "J", "K", "Q", "JK"];
+        if (cardsGroup.includes(value)) {
+            let card = this.state.card;
+            card.value = value;
+            card.iconPositions = this.state.iconPositions[value];
+            this.setState({ card: card });
+        }
+    }
+
+    handleColor(event) {
+        let value = event.target.value;
+        let card = this.state.card;
+        card.color = value;
+        this.setState({card: card});
     }
 
     handleIcon(event) {
         let value = event.target.value;
-        let icon = {
-            "heartBlack": icons.heart.black,
-            "losangoBlack": icons.losango.black,
-            "swordBlack": icons.sword.black,
-            "stickBlack": icons.stick.black,
-            "heartRed": icons.heart.red,
-            "losangoRed": icons.losango.red,
-            "swordRed": icons.sword.red,
-            "stickRed": icons.stick.red
-        }[value];
-        let color = (value.substring(value.length - 1) == "k"? "black": "red");
-        this.setState({ color: color, icon: icon, iconValue: value});
+        let card = this.state.card;
+        card.icon = value;
+        this.setState({card: card});
     }
 
     render() {
         let iconsCardGame = [];
-        for (let x in this.state.currentIconPosition) {
-            iconsCardGame.push(
-            <CustomImage image={this.state.icon} width={40} height={40} x={this.state.currentIconPosition[x].x} y={this.state.currentIconPosition[x].y} />
-            )
+        for (let x in this.state.card.iconPositions) {
+            let icon = this.state.card.iconPositions[x];
+            iconsCardGame.push(<Label id={"icons"} x={icon.x} y={icon.y}>
+                <Text rotation={icon.rotation} fontSize={60} fill={this.state.card.color} text={icon.icon ? icon.icon: this.state.card.icon} />
+            </Label>);
         }
         return (
             <div align={"center"}>
@@ -187,19 +186,19 @@ export default class BaralhoCardGame extends React.Component {
                                     cornerRadius={[10, 10, 10, 10]}
                                 />
                                 <Label id={"valueTop"} x={30} y={30}>
-                                    <Text fontSize={30} fill={this.state.color} text={this.state.value} />
+                                    <Text fontSize={30} fill={this.state.card.color} text={this.state.card.value} />
                                 </Label>
                                 <Rect id={"rectCenter"}
                                     x={60}
                                     y={70}
                                     width={230}
                                     height={360}
-                                    stroke={this.state.color}
+                                    stroke={this.state.card.color}
                                     cornerRadius={[10, 10, 10, 10]}
                                     strokeWidth={5}
                                 />
                                 <Label id={"valueBottom"} x={310} y={470}>
-                                    <Text rotation={180} fontSize={30} fill={this.state.color} text={this.state.value} />
+                                    <Text rotation={180} fontSize={30} fill={this.state.card.color} text={this.state.card.value} />
                                 </Label>
                                 {iconsCardGame}
                             </Layer>
@@ -209,8 +208,9 @@ export default class BaralhoCardGame extends React.Component {
                         </Fab>
                     </Grid>
                     <Grid id={"cardOptions"} item xs>
-                        <CardValueOptions handleChange={this.handleValue} />
-                        <CardIconOptions value={this.state.iconValue} handleChange={this.handleIcon}/>
+                        <ValueOptions handleChange={this.handleValue} />
+                        <IconOptions value={this.state.card.icon} handleChange={this.handleIcon}/>
+                        <ColorOptions value={this.state.card.color} handleChange={this.handleColor} />
                     </Grid>
                 </Grid>
             </div>
