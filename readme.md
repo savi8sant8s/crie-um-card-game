@@ -3,7 +3,7 @@
 ```
 Site para criar e baixar um card game customizado.
 ```
-![Primeira versão](./images/second-version.png)
+![Segunda versão](./images/presentation.png)
 
 ******
-Acesse o site: [crie-um-card-game.vercel.app](https://crie-um-card-game.vercel.app)
+Acesse o site: [crieumcardgame.vercel.app](https://crieumcardgame.vercel.app)

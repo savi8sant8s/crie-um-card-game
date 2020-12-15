@@ -11,8 +11,8 @@ import Typography from "@material-ui/core/Typography";
 import { Stage, Layer, Rect, Label, Text } from "react-konva";
 
 const styles = {
-    golden: {
-        color: "gold"
+    white: {
+        color: "white"
     },
     red: {
         color: "red"
@@ -55,7 +55,7 @@ const IconOptions = (props) => {
         <div>
             <Typography variant={"h6"}>Clique no ícone que deseja</Typography>
             <RadioGroup value={props.value} onChange={props.handleChange}>
-                <Grid item xs style={styles.golden}>
+                <Grid item xs style={styles.white}>
                     <FormControlLabel value={"♥"} control={<Radio />} label={"♥"} />
                     <FormControlLabel value={"♦"} control={<Radio />} label={"♦"} />
                     <FormControlLabel value={"♠"} control={<Radio />} label={"♠"} />
@@ -70,7 +70,7 @@ const ColorOptions = (props) => {
 
     return (
         <div>
-            <Typography variant={"h6"}>Clique no ícone que deseja</Typography>
+            <Typography variant={"h6"}>Clique na cor que deseja</Typography>
             <RadioGroup value={props.value} onChange={props.handleChange}>
                 <Grid item xs>
                     <FormControlLabel style={{color: "black"}} value={"black"} control={<Radio />} label={"Preto"} />
@@ -134,7 +134,7 @@ export default class BaralhoCardGame extends React.Component {
 
     handleExport() {
         const uri = this.ref.current.toDataURL();
-        this.downloadURI(uri, "simple-card-game.png");
+        this.downloadURI(uri, "baralho-card-game.png");
     };
 
     handleValue(event) {

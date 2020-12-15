@@ -72,7 +72,7 @@ export default class ExampleCardGame extends React.Component {
 
     handleExport() {
         const uri = this.ref.current.toDataURL();
-        this.downloadURI(uri, "simple-card-game.png");
+        this.downloadURI(uri, "exemplo-card-game.png");
     };
 
     handleClearForm() {
